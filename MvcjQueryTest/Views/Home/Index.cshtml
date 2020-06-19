@@ -1,0 +1,56 @@
+﻿@model MvcjQueryTest.Models.jobdetail
+
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var tr;
+        $.getJSON("/Home/GetJobDetails",
+            function (json) {
+                $.each(json, function (i, jobdetail) {
+                    var jobID = jobdetail.JobID;
+                    tr = $('<tr/>');
+                    tr.append("<td class='TaskName'>" + jobdetail.Task_Name + "</td>");
+                    tr.append("<td class='Description'>" + jobdetail.Description + "</td>");
+                    tr.append("<td class='DateStarted'>" + jobdetail.Date_Started + "</td>");
+                    tr.append("<td class='DateFinished'>" + jobdetail.Date_Finished + "</td>");
+                    tr.append("<td class='Status'>" + jobdetail.Status + "</td>");
+                    tr.append("<td>" + "<a Onclick='return false;' class='DeleteCss' href=/Home/Delete/" + jobID + ">Delete</a>" + " | " + "<a class='EditCss' href=/Home/Edit/" + jobID + ">Edit</a>" + "</td>");
+                    $('#tblJobDet').append(tr);
+                });
+            });
+        $('#tblJobDet').on('click', 'td a.DeleteCss', function () {
+            var DeleteUrl = $(this).attr("href");
+            $.ajax({
+                url: DeleteUrl,
+                dataType: "json",
+                type: "POST",
+                contentType: "application/json",
+                success: function (response) {
+                    window.location.href = "/Home/Index"
+                }
+            });
+        });
+    });
+
+
+
+</script>
+
+<table class="table table-striped table-condensed" id="tblJobDet">
+    <thead>
+        <tr>
+            <th> Task Name</th>
+            <th> Description</th>
+            <th> Date Started</th>
+            <th> Date Finished</th>
+            <th> Status</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+
+</table>
+
